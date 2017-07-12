@@ -14,7 +14,7 @@ function testObserverInterval(interval, duration, errorRange, done) {
   setTimeout(function () {
     observer.stop();
     const error = Math.abs(cnt - duration / interval)
-    const msg = 'Expect {error} tobe less than {errorRange}.'
+    const msg = 'Expect {error} to be less than {errorRange}.'
                     .replace('{error}', error)
                     .replace('{errorRange}', errorRange);
     assert( error <= errorRange, msg);
@@ -37,7 +37,7 @@ describe('Test StatsObserver', function() {
 
   it('test broadcast', function (done) {
     const observer = new instanceStats.StatsObserver(10);
-    observer.on('cpu', function () {
+    observer.on('gpu', function () {
       done();
     });
 

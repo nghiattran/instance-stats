@@ -1,6 +1,6 @@
 {
   "name": "instance-stats",
-  "version": "0.0.0",
+  "version": "0.0.3",
   "description": "Get CPU and GPU statistics for computer instances.",
   "main": "index.js",
   "scripts": {

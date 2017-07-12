@@ -32,7 +32,7 @@ function getCpusInfo() {
  * @param  {Object} queryFields Fields to be queried. Keys of object are the query field and values are corresponding renamed key in returned object.
  * @return {Object}             Gpu info
  */
-function getGpuInfo(queryFields=defaultGpuQuery) {
+function getGpusInfo(queryFields=defaultGpuQuery) {
   const keys = Object.keys(queryFields);
   let fields = keys.join(',');
   const query = `nvidia-smi --query-gpu=${fields} --format=csv,noheader,nounits`;
@@ -72,7 +72,7 @@ class StatsObserver extends EventEmitter {
   }
 
   /**
-   * Set parameter for getGpuInfo function
+   * Set parameter for getGpusInfo function
    * @param {[type]} query [description]
    */
   setGpuQuery(query=defaultGpuQuery) {
@@ -84,13 +84,19 @@ class StatsObserver extends EventEmitter {
    */
   broadcast() {
     let self = this;
-    this.emit('cpu', getCpusInfo(), Date.now());
-    getGpuInfo(this.gpuQuery)
-      .then(function (stdout, stderr) {
-        self.emit('gpu', stdout, Date.now());
+    const cpuInfo = getCpusInfo();
+
+    self.emit('cpu', cpuInfo, Date.now());
+    getGpusInfo(this.gpuQuery)
+      .then(function (gpuInfo, stderr) {
+        const timestamp = Date.now();
+        self.emit('gpu', gpuInfo, timestamp);
+        self.emit('cpu-gpu', {cpuInfo, gpuInfo}, timestamp);
       })
       .catch(function (error) {
-        self.emit('gpu-error', error);
+        const timestamp = Date.now();
+        self.emit('gpu-error', error, timestamp);
+        self.emit('cpu-gpu-error', {cpuInfo, gpuError:error}, timestamp);
       })
   }
 
@@ -124,5 +130,5 @@ class StatsObserver extends EventEmitter {
 }
 
 module.exports = {
-  getGpuInfo, getCpusInfo, StatsObserver
+  getGpusInfo, getCpusInfo, StatsObserver
 }

@@ -19,8 +19,8 @@ const instanceStats = require('instance-stats');
 let cpus = instanceStats.getCpuInfo();
 console.log(cpus);
 
-// Get gpu info. getGpuInfo function return a promise
-instanceStats.getGpuInfo()
+// Get gpu info. getGpusInfo function return a promise
+instanceStats.getGpusInfo()
   .then(function(gpus, stderr) {
     console.log(gpus);
   })
